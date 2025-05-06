@@ -1,6 +1,50 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Add to the <head> of your index.html -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; /* For iOS smooth scrolling */
+    }
+    
+    /* Optimize tap targets for mobile */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+    
+    /* Add viewport meta tag if not already present */
+    /* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> */
+    
+    /* Media query for small devices */
+    @media (max-width: 640px) {
+      .text-4xl {
+        font-size: 1.875rem;
+      }
+      
+      .px-8 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      
+      .py-4 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+    }
+  </style>
+
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

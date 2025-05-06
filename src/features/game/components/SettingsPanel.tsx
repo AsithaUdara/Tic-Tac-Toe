@@ -1,20 +1,11 @@
 import React from 'react';
 import { useTheme } from '../../../context/ThemeContext';
-import type { 
-  SettingsPanelProps, 
-  GameMode, 
-  Difficulty, 
-  Player, 
-  ThemeType, 
-  AnimationSpeed, 
-  TabType 
-} from '../../../types/game.types';
+import type { SettingsPanelProps } from '../../../types/game.types';
 
-// Settings Panel Component
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ 
-  gameMode, 
-  aiDifficulty, 
-  humanPlayer, 
+const SettingsPanel: React.FC<SettingsPanelProps> = ({
+  gameMode,
+  aiDifficulty,
+  humanPlayer,
   gameInProgress,
   onGameModeChange,
   onDifficultyChange,
@@ -22,121 +13,89 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onThemeChange,
   onAnimationSpeedChange,
   onTabChange,
+  currentTheme,
+  currentAnimationSpeed
 }) => {
-  const { colors, theme, animationSpeed } = useTheme();
+  const { colors, theme } = useTheme();
+  
+  // Return button handler
+  const handleBack = () => {
+    onTabChange('game');
+  };
   
   return (
-    <div className={`${colors.panel} rounded-lg shadow-xl p-6 w-full max-w-2xl mx-auto
-                     transform animate-fade-in backdrop-blur-sm`}>
-      <h2 className={`text-xl font-bold mb-6 text-center ${colors.heading}`}>Game Settings</h2>
+    <div className={`w-full max-w-2xl mx-auto ${colors.panel} rounded-lg shadow-xl p-6 animate-fade-in backdrop-blur-sm`}>
+      {/* Header with Back Button */}
+      <div className="flex items-center mb-8">
+        <button 
+          onClick={handleBack}
+          className={`mr-4 p-3 rounded-md ${colors.secondary} transition-all duration-300 transform hover:scale-105 hover:bg-opacity-80`}
+          aria-label="Back to game"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 className={`text-2xl sm:text-3xl font-bold ${colors.cardText}`}>Game Settings</h1>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Game Mode Settings */}
-        <div className={`p-4 ${colors.accent} rounded-lg`}>
-          <h3 className={`text-lg font-medium mb-4 border-b border-gray-700 pb-2 ${colors.cardText}`}>Game Mode</h3>
-          <div className="flex flex-col gap-3">
+        {/* Game Mode Section */}
+        <div className="space-y-4">
+          <h3 className={`text-lg font-semibold ${colors.labelText}`}>Game Mode</h3>
+          <div className="space-y-2">
             <button
-              className={`px-4 py-3 rounded-md text-md font-medium transition-all duration-200
-                         transform hover:scale-105 active:scale-95 flex items-center justify-between
-                         ${gameMode === 'human' ? colors.primary : colors.secondary}`}
+              className={`w-full p-3 rounded-md transition-all duration-300 text-left flex items-center justify-between
+                       ${gameMode === 'human' 
+                         ? colors.primary
+                         : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
               onClick={() => onGameModeChange('human')}
               disabled={gameInProgress}
             >
               <span>Human vs Human</span>
               {gameMode === 'human' && (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <path d="M20 6L9 17l-5-5"></path>
                 </svg>
               )}
             </button>
+            
             <button
-              className={`px-4 py-3 rounded-md text-md font-medium transition-all duration-200
-                         transform hover:scale-105 active:scale-95 flex items-center justify-between
-                         ${gameMode === 'ai' ? colors.primary : colors.secondary}`}
+              className={`w-full p-3 rounded-md transition-all duration-300 text-left flex items-center justify-between
+                       ${gameMode === 'ai' 
+                         ? colors.primary
+                         : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
               onClick={() => onGameModeChange('ai')}
               disabled={gameInProgress}
             >
               <span>Human vs AI</span>
               {gameMode === 'ai' && (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <path d="M20 6L9 17l-5-5"></path>
                 </svg>
               )}
             </button>
           </div>
         </div>
         
-        {/* AI Settings (only shown when AI mode is selected) */}
-        {gameMode === 'ai' && (
-          <div className={`p-4 ${colors.accent} rounded-lg`}>
-            <h3 className={`text-lg font-medium mb-4 border-b border-gray-700 pb-2 ${colors.cardText}`}>AI Difficulty</h3>
-            <div className="flex flex-col gap-3">
-              {(['easy', 'medium', 'hard'] as Difficulty[]).map(difficulty => (
-                <button
-                  key={difficulty}
-                  className={`px-4 py-3 rounded-md text-md font-medium transition-all duration-200
-                             transform hover:scale-105 active:scale-95 flex items-center justify-between
-                             ${aiDifficulty === difficulty ? colors.primary : colors.secondary}`}
-                  onClick={() => onDifficultyChange(difficulty)}
-                  disabled={gameInProgress}
-                >
-                  <span className="capitalize">{difficulty}</span>
-                  {aiDifficulty === difficulty && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Player Choice (only shown when AI mode is selected) */}
-        {gameMode === 'ai' && (
-          <div className={`p-4 ${colors.accent} rounded-lg`}>
-            <h3 className={`text-lg font-medium mb-4 border-b border-gray-700 pb-2 ${colors.cardText}`}>Play as</h3>
-            <div className="flex justify-between gap-4">
+        {/* AI Difficulty Section */}
+        <div className="space-y-4">
+          <h3 className={`text-lg font-semibold ${colors.labelText}`}>AI Difficulty</h3>
+          <div className="space-y-2">
+            {['easy', 'medium', 'hard'].map((level) => (
               <button
-                className={`flex-1 py-3 rounded-md text-xl font-bold transition-all duration-200
-                           transform hover:scale-105 active:scale-95 flex flex-col items-center justify-center
-                           ${humanPlayer === 'X' ? colors.primary : colors.secondary}`}
-                onClick={() => onPlayerChange('X')}
+                key={level}
+                className={`w-full p-3 rounded-md transition-all duration-300 text-left flex items-center justify-between
+                         ${aiDifficulty === level 
+                           ? colors.primary
+                           : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
+                onClick={() => onDifficultyChange(level as any)}
                 disabled={gameInProgress}
               >
-                <span className={theme === 'elegance' && humanPlayer === 'X' ? 'text-black' : colors.xColor}>X</span>
-                <span className="text-sm mt-1">First</span>
-              </button>
-              <button
-                className={`flex-1 py-3 rounded-md text-xl font-bold transition-all duration-200
-                           transform hover:scale-105 active:scale-95 flex flex-col items-center justify-center
-                           ${humanPlayer === 'O' ? colors.primary : colors.secondary}`}
-                onClick={() => onPlayerChange('O')}
-                disabled={gameInProgress}
-              >
-                <span className={theme === 'elegance' && humanPlayer === 'O' ? 'text-black' : colors.oColor}>O</span>
-                <span className="text-sm mt-1">Second</span>
-              </button>
-            </div>
-          </div>
-        )}
-        
-        {/* Theme Settings */}
-        <div className={`p-4 ${colors.accent} rounded-lg`}>
-          <h3 className={`text-lg font-medium mb-4 border-b border-gray-700 pb-2 ${colors.cardText}`}>Theme</h3>
-          <div className="flex flex-col gap-3">
-            {(['neon', 'elegance', 'modern'] as ThemeType[]).map(themeOption => (
-              <button
-                key={themeOption}
-                className={`px-4 py-3 rounded-md text-md font-medium transition-all duration-200
-                           transform hover:scale-105 active:scale-95 flex items-center justify-between
-                           ${theme === themeOption ? colors.primary : colors.secondary}`}
-                onClick={() => onThemeChange(themeOption)}
-              >
-                <span className="capitalize">{themeOption}</span>
-                {theme === themeOption && (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" />
+                <span className="capitalize">{level}</span>
+                {aiDifficulty === level && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                    <path d="M20 6L9 17l-5-5"></path>
                   </svg>
                 )}
               </button>
@@ -144,22 +103,53 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
           </div>
         </div>
         
-        {/* Animation Speed Settings */}
-        <div className={`p-4 ${colors.accent} rounded-lg`}>
-          <h3 className={`text-lg font-medium mb-4 border-b border-gray-700 pb-2 ${colors.cardText}`}>Animation Speed</h3>
-          <div className="flex flex-col gap-3">
-            {(['fast', 'normal', 'slow'] as AnimationSpeed[]).map(speed => (
+        {/* Play as Section */}
+        <div className="space-y-4">
+          <h3 className={`text-lg font-semibold ${colors.labelText}`}>Play as</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              className={`p-4 rounded-md transition-all duration-300 flex flex-col items-center justify-center
+                       ${humanPlayer === 'X' 
+                         ? colors.primary
+                         : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
+              onClick={() => onPlayerChange('X')}
+              disabled={gameInProgress}
+            >
+              <span className={`text-3xl font-bold ${humanPlayer === 'X' ? 'text-white' : colors.xColor}`}>X</span>
+              <span className="text-sm mt-1">First</span>
+            </button>
+            
+            <button
+              className={`p-4 rounded-md transition-all duration-300 flex flex-col items-center justify-center
+                       ${humanPlayer === 'O' 
+                         ? colors.primary
+                         : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
+              onClick={() => onPlayerChange('O')}
+              disabled={gameInProgress}
+            >
+              <span className={`text-3xl font-bold ${humanPlayer === 'O' ? 'text-white' : colors.oColor}`}>O</span>
+              <span className="text-sm mt-1">Second</span>
+            </button>
+          </div>
+        </div>
+        
+        {/* Theme Section */}
+        <div className="space-y-4">
+          <h3 className={`text-lg font-semibold ${colors.labelText}`}>Theme</h3>
+          <div className="space-y-2">
+            {['neon', 'elegance', 'modern'].map((themeName) => (
               <button
-                key={speed}
-                className={`px-4 py-3 rounded-md text-md font-medium transition-all duration-200
-                           transform hover:scale-105 active:scale-95 flex items-center justify-between
-                           ${animationSpeed === speed ? colors.primary : colors.secondary}`}
-                onClick={() => onAnimationSpeedChange(speed)}
+                key={themeName}
+                className={`w-full p-3 rounded-md transition-all duration-300 text-left flex items-center justify-between
+                         ${currentTheme === themeName 
+                           ? colors.primary
+                           : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
+                onClick={() => onThemeChange(themeName as any)}
               >
-                <span className="capitalize">{speed}</span>
-                {animationSpeed === speed && (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" />
+                <span className="capitalize">{themeName}</span>
+                {currentTheme === themeName && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                    <path d="M20 6L9 17l-5-5"></path>
                   </svg>
                 )}
               </button>
@@ -168,23 +158,43 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
       </div>
       
+      {/* Animation Speed Section */}
+      <div className="mt-8 space-y-4">
+        <h3 className={`text-lg font-semibold ${colors.labelText}`}>Animation Speed</h3>
+        <div className="flex gap-4 justify-center">
+          {['slow', 'normal', 'fast'].map((speed) => (
+            <button
+              key={speed}
+              className={`px-6 py-3 rounded-md transition-all duration-300 capitalize
+                       ${currentAnimationSpeed === speed 
+                         ? colors.primary
+                         : `${colors.accent} hover:${colors.primary.replace('bg-', 'border-')} border border-transparent`}`}
+              onClick={() => onAnimationSpeedChange(speed as any)}
+            >
+              {speed}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      {/* Footer with Return to Game Button */}
+      <div className="mt-8 pt-6 border-t border-gray-700">
+        <button
+          onClick={handleBack}
+          className={`w-full px-6 py-3 rounded-md ${colors.primary} transition-all duration-300 transform hover:scale-105 active:scale-95 font-medium`}
+        >
+          Return to Game
+        </button>
+      </div>
+      
+      {/* Game in Progress Message */}
       {gameInProgress && (
-        <div className="mt-4 p-3 bg-gray-800 border border-gray-700 rounded-md">
-          <p className="text-gray-300 text-sm">
-            Some settings can only be changed before starting a new game
+        <div className={`mt-6 p-4 ${colors.accent} rounded-md text-center`}>
+          <p className={`${colors.labelText} text-sm`}>
+            Some settings can only be changed when no game is in progress.
           </p>
         </div>
       )}
-      
-      <div className="text-center mt-6">
-        <button
-          className={`px-4 py-2 rounded-md ${colors.primary} transition-all duration-200
-                     transform hover:scale-105 active:scale-95`}
-          onClick={() => onTabChange('game')}
-        >
-          Back to Game
-        </button>
-      </div>
     </div>
   );
 };

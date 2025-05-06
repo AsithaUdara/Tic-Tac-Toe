@@ -82,22 +82,26 @@ const Game: React.FC<GameProps> = ({
   };
   
   return (
-    <div className={`${colors.panel} rounded-lg shadow-xl p-6 w-full max-w-lg mx-auto transition-all duration-300
+    <div className={`${colors.panel} rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-lg mx-auto transition-all duration-300
                      transform animate-fade-in backdrop-blur-sm`}>
+      {/* Game status */}
       <GameStatus 
         gameState={gameState}
         currentPlayer={currentPlayer}
         isAIThinking={isAIThinking}
       />
       
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <div className={`flex items-center ${colors.accent} px-3 py-1 rounded-md`}>
+      {/* Game info */}
+      <div className="mb-4 sm:mb-6">
+        <div className="flex flex-wrap gap-2 justify-between items-center">
+          <div className={`flex items-center ${colors.accent} px-2 sm:px-3 py-1 rounded-md text-sm sm:text-base`}>
             <span className={`${colors.labelText} mr-2`}>Mode:</span>
-            <span className={`font-medium ${colors.cardText}`}>{gameMode === 'human' ? 'Human vs Human' : 'Human vs AI'}</span>
+            <span className={`font-medium ${colors.cardText}`}>
+              {gameMode === 'human' ? 'Human vs Human' : 'Human vs AI'}
+            </span>
           </div>
           {gameMode === 'ai' && (
-            <div className={`flex items-center ${colors.accent} px-3 py-1 rounded-md`}>
+            <div className={`flex items-center ${colors.accent} px-2 sm:px-3 py-1 rounded-md text-sm sm:text-base`}>
               <span className={`${colors.labelText} mr-2`}>AI:</span>
               <span className={`font-medium capitalize ${colors.cardText}`}>{aiDifficulty}</span>
             </div>
@@ -105,12 +109,15 @@ const Game: React.FC<GameProps> = ({
         </div>
       </div>
       
-      <Board 
-        squares={currentSquares} 
-        onSquareClick={handleSquareClick}
-        winningLine={gameState.winner ? gameState.line ?? null : null}
-        currentPlayer={currentPlayer}
-      />
+      {/* Board - optimize for smaller screens */}
+      <div className="flex justify-center">
+        <Board 
+          squares={currentSquares} 
+          onSquareClick={handleSquareClick}
+          winningLine={gameState.winner ? gameState.line ?? null : null}
+          currentPlayer={currentPlayer}
+        />
+      </div>
       
       {gameState.isOver && (
         <div className={`mt-6 p-4 ${colors.accent} rounded-md text-center animate-fade-in`}>
@@ -134,7 +141,7 @@ const Game: React.FC<GameProps> = ({
         <div className="mt-6 text-center animate-pulse-subtle">
           <button 
             className={`px-8 py-4 rounded-md text-lg font-medium ${colors.primary} shadow-lg
-                      transition-all duration-300 transform hover:scale-105 active:scale-95`}
+                       transition-all duration-300 transform hover:scale-105 active:scale-95`}
             onClick={handleNewGame}
           >
             Start Game
