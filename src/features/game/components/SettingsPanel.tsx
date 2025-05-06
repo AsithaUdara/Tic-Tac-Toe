@@ -16,7 +16,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   currentTheme,
   currentAnimationSpeed
 }) => {
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
   
   // Return button handler
   const handleBack = () => {

@@ -4,7 +4,7 @@ import type { Player } from '../../../types/game.types';
 
 // Square component props interface
 interface SquareProps {
-  value: Player;
+  value: Player | null; 
   onSquareClick: () => void;
   isWinningSquare: boolean;
   index: number;
@@ -55,7 +55,7 @@ const Square: React.FC<SquareProps> = ({ value, onSquareClick, isWinningSquare, 
   };
   
   // SVG paths for X and O with drawing animation
-  const getXPath = (progress: number): JSX.Element => {
+  const getXPath = (progress: number): React.ReactElement => {
     // Draw X with two lines, animated by progress (0-1)
     const length = progress * 100;
     return (
@@ -82,7 +82,7 @@ const Square: React.FC<SquareProps> = ({ value, onSquareClick, isWinningSquare, 
     );
   };
 
-  const getOPath = (progress: number): JSX.Element => {
+  const getOPath = (progress: number): React.ReactElement => {
     // Draw O as a circle, animated by progress (0-1)
     const circumference = 2 * Math.PI * 30;
     const strokeDasharray = `${circumference * progress} ${circumference}`;
@@ -108,6 +108,10 @@ const Square: React.FC<SquareProps> = ({ value, onSquareClick, isWinningSquare, 
   
   // Determine preview mark color
   const previewColor = currentPlayer === 'X' ? colors.xColor : colors.oColor;
+  
+  // Note: The 'index' prop is used for array key but not directly in this component
+  // Keeping it for future use or parent component needs
+  console.debug(`Square at index ${index} rendered`);
   
   return (
     <button 

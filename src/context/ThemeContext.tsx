@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useContext, useMemo } from 'react';
 import type { ThemeType, AnimationSpeed, ThemeContextType, ThemeProviderProps } from '../types/game.types';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -35,7 +35,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialT
           labelText: 'text-gray-400',
           cardText: 'text-white',
           navActive: 'text-white',
-          navInactive: 'text-gray-300 hover:text-white'
+          navInactive: 'text-gray-300 hover:text-white',
+          bg: 'bg-gradient-to-b from-indigo-900 via-purple-800 to-pink-700',
+          header: 'bg-gradient-to-r from-indigo-900 to-gray-900',
+          winColor: 'text-green-400',
+          heading: 'text-indigo-400',
+          button: 'bg-indigo-600 hover:bg-indigo-700',
+          buttonHover: 'hover:bg-indigo-500'
         };
       case 'elegance':
         return {
@@ -52,7 +58,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialT
           labelText: 'text-gray-400',
           cardText: 'text-white',
           navActive: 'text-white',
-          navInactive: 'text-gray-300 hover:text-white'
+          navInactive: 'text-gray-300 hover:text-white',
+          bg: 'bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700',
+          header: 'bg-gradient-to-r from-gray-800 to-gray-900',
+          winColor: 'text-amber-400',
+          heading: 'text-amber-400',
+          button: 'bg-amber-600 hover:bg-amber-700',
+          buttonHover: 'hover:bg-amber-500'
         };
       case 'modern':
         return {
@@ -69,7 +81,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialT
           labelText: 'text-gray-400',
           cardText: 'text-white',
           navActive: 'text-white',
-          navInactive: 'text-gray-300 hover:text-white'
+          navInactive: 'text-gray-300 hover:text-white',
+          bg: 'bg-gradient-to-b from-teal-900 via-slate-800 to-slate-700',
+          header: 'bg-gradient-to-r from-teal-900 to-slate-900',
+          winColor: 'text-teal-400',
+          heading: 'text-teal-400',
+          button: 'bg-teal-600 hover:bg-teal-700',
+          buttonHover: 'hover:bg-teal-500'
         };
       default:
         return {
@@ -86,7 +104,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialT
           labelText: 'text-gray-400',
           cardText: 'text-white',
           navActive: 'text-white',
-          navInactive: 'text-gray-300 hover:text-white'
+          navInactive: 'text-gray-300 hover:text-white',
+          bg: 'bg-gradient-to-b from-indigo-900 via-purple-800 to-pink-700',
+          header: 'bg-gradient-to-r from-indigo-900 to-gray-900',
+          winColor: 'text-green-400',
+          heading: 'text-indigo-400',
+          button: 'bg-indigo-600 hover:bg-indigo-700',
+          buttonHover: 'hover:bg-indigo-500'
         };
     }
   }, [theme]);

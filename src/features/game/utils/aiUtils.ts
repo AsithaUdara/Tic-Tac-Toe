@@ -1,4 +1,3 @@
-// src/features/game/utils/aiUtils.ts
 import type { Player, GameState, MinimaxResult } from '../../../types/game.types';
 
 export function getEmptySquares(squares: Player[]): number[] {
@@ -66,25 +65,24 @@ export function minimax(
   
   if (gameState.isOver || depth >= maxDepth) {
     if (gameState.winner === aiPlayer) {
-      return { score: 10 - depth, move: null };
+      return { score: 10 - depth, move: undefined };
     } 
     else if (gameState.winner && gameState.winner !== aiPlayer) {
-      return { score: depth - 10, move: null };
+      return { score: depth - 10, move: undefined };
     } 
     else {
-      return { score: 0, move: null };
+      return { score: 0, move: undefined };
     }
   }
   
   const availableMoves = getEmptySquares(squares);
   
   if (availableMoves.length === 0) {
-    return { score: 0, move: null };
+    return { score: 0, move: undefined };
   }
   
   let bestScore = isMaximizing ? -Infinity : Infinity;
-  let bestMove: number | null = null;
-  
+  let bestMove: number | undefined = undefined;
   // Prioritize center and corners for first moves (optimization)
   if (depth === 0 && availableMoves.length > 6) {
     const priorityMoves = [4, 0, 2, 6, 8]; // Center and corners
@@ -173,5 +171,5 @@ export function makeAIMove(
   if (emptyCount <= 5) maxDepth = 9; // Full search for endgame
   
   const { move } = minimax(squares, aiPlayer, aiPlayer, 0, true, -Infinity, Infinity, maxDepth);
-  return move;
+  return move ?? null;
 }

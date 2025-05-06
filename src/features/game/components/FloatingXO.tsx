@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../../context/ThemeContext';
+import type { FloatingXOProps } from '../../../types/game.types';
 
 // Component for interactive floating X and O characters
-const FloatingXO: React.FC = () => {
+const FloatingXO: React.FC<FloatingXOProps> = ({ isTabSwitch = false }) => {
   const { colors } = useTheme();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(true);
   const [characters, setCharacters] = useState<Array<{
     type: 'X' | 'O';
     x: number;
@@ -15,6 +17,22 @@ const FloatingXO: React.FC = () => {
     vy: number;
     id: number;
   }>>([]);
+  
+  // Handle visibility based on tab switch
+  useEffect(() => {
+    if (isTabSwitch) {
+      // When switching tabs, fade out and regenerate characters
+      setIsVisible(false);
+      
+      const timeout = setTimeout(() => {
+        // Regenerate characters after fade out
+        initializeCharacters();
+        setIsVisible(true);
+      }, 300);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isTabSwitch]);
   
   // Track mouse position
   useEffect(() => {
@@ -29,12 +47,12 @@ const FloatingXO: React.FC = () => {
     };
   }, []);
   
-  // Initialize characters
-  useEffect(() => {
+  // Initialize characters function
+  const initializeCharacters = () => {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
     const initialCharacters = Array.from({ length: 12 }, (_, index) => {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      
       return {
         type: index % 2 === 0 ? 'X' : 'O' as 'X' | 'O',
         x: Math.random() * windowWidth,
@@ -43,15 +61,22 @@ const FloatingXO: React.FC = () => {
         rotation: Math.random() * 360,
         vx: (Math.random() - 0.5) * 2,
         vy: (Math.random() - 0.5) * 2,
-        id: index
+        id: Date.now() + index // Use timestamp to ensure unique IDs
       };
     });
     
     setCharacters(initialCharacters);
+  };
+  
+  // Initialize characters on mount
+  useEffect(() => {
+    initializeCharacters();
   }, []);
   
   // Animate characters and react to mouse
   useEffect(() => {
+    if (!isVisible) return;
+    
     const animationFrame = requestAnimationFrame(() => {
       const mouseInfluenceRadius = 200; // How far the mouse influence reaches
       const mouseRepelStrength = 1; // How strongly characters are repelled
@@ -112,10 +137,13 @@ const FloatingXO: React.FC = () => {
     });
     
     return () => cancelAnimationFrame(animationFrame);
-  }, [characters, mousePosition]);
+  }, [characters, mousePosition, isVisible]);
+  
+  // Animation class based on visibility and tab switch
+  const animationClass = `transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`;
   
   return (
-    <>
+    <div className={animationClass}>
       {characters.map(char => (
         <div 
           key={char.id}
@@ -125,15 +153,15 @@ const FloatingXO: React.FC = () => {
             top: `${char.y}px`,
             fontSize: `${char.size}px`,
             transform: `translate(-50%, -50%) rotate(${char.rotation}deg)`,
-            opacity: 0.6,
+            opacity: isVisible ? 0.6 : 0,
             textShadow: '0 0 10px currentColor',
-            transition: 'transform 0.1s ease-out'
+            transition: 'opacity 0.3s ease-out, transform 0.1s ease-out'
           }}
         >
           {char.type}
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
