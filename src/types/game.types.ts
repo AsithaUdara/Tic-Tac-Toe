@@ -1,19 +1,16 @@
-// src/types/game.types.ts
-
-// Basic type definitions
-export type Player = 'X' | 'O' | null;
+// game.types.ts
+export type Player = 'X' | 'O';
+export type TabType = 'game' | 'settings' | 'scores';
+export type ThemeType = 'neon' | 'elegance' | 'modern';
+export type AnimationSpeed = 'slow' | 'normal' | 'fast';
 export type GameMode = 'human' | 'ai';
 export type Difficulty = 'easy' | 'medium' | 'hard';
-export type ThemeType = 'neon' | 'elegance' | 'modern';
-export type AnimationSpeed = 'fast' | 'normal' | 'slow';
-export type TabType = 'game' | 'settings' | 'scores';
 
-// Game state related interfaces
 export interface GameState {
   isOver: boolean;
-  winner: Player;
+  winner: Player | null;
   isDraw: boolean;
-  line?: number[];
+  line?: number[] | null;
 }
 
 export interface Scores {
@@ -22,22 +19,27 @@ export interface Scores {
   ties: number;
 }
 
-// Theme related interfaces
 export interface ThemeColors {
-  bg: string;
+  panel: string;
+  accent: string;
   primary: string;
   secondary: string;
-  accent: string;
-  panel: string;
-  header: string;
+  square: string;
+  highlight: string;
   xColor: string;
   oColor: string;
+  xColorHover: string;
+  oColorHover: string;
+  labelText: string;
+  cardText: string;
+  navActive: string;
+  navInactive: string;
+  bg: string;
+  header: string;
   winColor: string;
   heading: string;
-  cardText: string;
-  labelText: string;
-  tabActive: string;
-  tabInactive: string;
+  button: string;
+  buttonHover: string;
 }
 
 export interface ThemeContextType {
@@ -49,26 +51,10 @@ export interface ThemeContextType {
   colors: ThemeColors;
 }
 
-// Component props interfaces
-export interface SquareProps {
-  value: Player;
-  onSquareClick: () => void;
-  isWinningSquare: boolean;
-  index: number;
-  currentPlayer: Player;
-}
-
-export interface BoardProps {
-  squares: Player[];
-  onSquareClick: (index: number) => void;
-  winningLine: number[] | null;
-  currentPlayer: Player;
-}
-
-export interface GameStatusProps {
-  gameState: GameState;
-  currentPlayer: Player;
-  isAIThinking: boolean;
+export interface ThemeProviderProps {
+  children: React.ReactNode;
+  initialTheme?: ThemeType;
+  initialSpeed?: AnimationSpeed;
 }
 
 export interface HeaderProps {
@@ -78,7 +64,7 @@ export interface HeaderProps {
 
 export interface GameProps {
   onShowNotification: (message: string) => void;
-  onGameStateChange?: (gameState: GameState) => void;
+  onGameStateChange: (state: GameState) => void;
   gameMode: GameMode;
   aiDifficulty: Difficulty;
   humanPlayer: Player;
@@ -89,14 +75,14 @@ export interface SettingsPanelProps {
   aiDifficulty: Difficulty;
   humanPlayer: Player;
   gameInProgress: boolean;
-  currentTheme: ThemeType;
-  currentAnimationSpeed: AnimationSpeed;
   onGameModeChange: (mode: GameMode) => void;
   onDifficultyChange: (difficulty: Difficulty) => void;
   onPlayerChange: (player: Player) => void;
   onThemeChange: (theme: ThemeType) => void;
   onAnimationSpeedChange: (speed: AnimationSpeed) => void;
   onTabChange: (tab: TabType) => void;
+  currentTheme: ThemeType;
+  currentAnimationSpeed: AnimationSpeed;
 }
 
 export interface ScoresPanelProps {
@@ -105,37 +91,54 @@ export interface ScoresPanelProps {
   onTabChange: (tab: TabType) => void;
 }
 
+export interface BoardProps {
+  squares: (Player | null)[];
+  onSquareClick: (i: number) => void;
+  winningLine: number[] | null;
+  currentPlayer: Player;
+}
+
+export interface SquareProps {
+  value: Player | null;
+  onSquareClick: () => void;
+  highlight: boolean;
+  currentPlayer: Player;
+  style?: React.CSSProperties;
+}
+
+export interface FloatingXOProps {
+  isTabSwitch?: boolean;
+}
+
 export interface NotificationProps {
   message: string;
   show: boolean;
 }
 
-export interface ConfettiProps {
-  show: boolean;
+export interface FloatingXOProps {
+  isTabSwitch?: boolean;
 }
 
-// Game hook return type
+export interface MinimaxResult {
+  score: number;
+  move?: number; 
+}
+
 export interface UseGameWithAIReturn {
-  history: Player[][];
+  history: (Player | null)[][];
   currentMove: number;
-  currentSquares: Player[];
+  currentSquares: (Player | null)[];
   xIsNext: boolean;
   gameState: GameState;
-  gameMode: GameMode;
-  aiDifficulty: Difficulty;
-  humanPlayer: Player;
   isAIThinking: boolean;
-  isHumanTurn: boolean;
   handleSquareClick: (i: number) => void;
-  jumpTo: (move: number) => void;
-  startNewGame: (mode?: GameMode, difficulty?: Difficulty, player?: Player) => void;
+  jumpTo: (nextMove: number) => void;
+  startNewGame: (mode: GameMode, difficulty: Difficulty, humanPlayer: Player) => void;
   setGameMode: (mode: GameMode) => void;
   setAiDifficulty: (difficulty: Difficulty) => void;
   setHumanPlayer: (player: Player) => void;
-}
-
-// AI algorithm interface
-export interface MinimaxResult {
-  score: number;
-  move: number | null;
+  aiDifficulty: Difficulty;
+  gameMode: GameMode;
+  humanPlayer: Player;  
+  isHumanTurn: boolean; 
 }

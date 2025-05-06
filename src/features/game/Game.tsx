@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useGameWithAI } from './hooks/useGameWithAI';
 import GameStatus from './components/GameStatus';
 import { Board } from './components';
-import type { GameProps, GameState } from '../../types/game.types';
+import type { GameProps, GameState, Player } from '../../types/game.types';
 
 // Game Panel Component
 const Game: React.FC<GameProps> = ({ 
@@ -162,14 +162,14 @@ const Game: React.FC<GameProps> = ({
               Start
             </button>
             
-            {history.slice(1).map((_, moveIndex) => {
+            {history.slice(1).map((_: (Player | null)[], moveIndex: number) => {
               const move = moveIndex + 1;
               return (
                 <button
                   key={move}
                   className={`px-3 py-1 rounded-md text-sm transition-all duration-200
-                             transform hover:scale-105 active:scale-95
-                             ${currentMove === move ? colors.primary : colors.secondary}`}
+                            transform hover:scale-105 active:scale-95
+                            ${currentMove === move ? colors.primary : colors.secondary}`}
                   onClick={() => jumpTo(move)}
                 >
                   #{move}

@@ -1,5 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useTheme } from '../../../context/ThemeContext';
+import { useState, useCallback, useEffect } from 'react';
 import type { 
   Player, 
   GameMode, 
@@ -54,7 +53,7 @@ export function useGameWithAI(): UseGameWithAIReturn {
   const [humanPlayer, setHumanPlayer] = useState<Player>('X');
   const [isAIThinking, setIsAIThinking] = useState<boolean>(false);
   
-  const { animationDuration } = useTheme();
+
 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
