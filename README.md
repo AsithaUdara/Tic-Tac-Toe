@@ -1,5 +1,11 @@
 # Tic-Tac-Toe Game
 
+## 🔗 Live Demo
+
+You can play the game here:  
+[https://tic-tac-toe-asithaudara.vercel.app](https://tic-tac-toe-asithaudara.vercel.app)
+
+
 <h2>📸 Game Previews</h2>
 
 <p align="center">
